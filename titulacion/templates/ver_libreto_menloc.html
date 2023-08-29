@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% load static %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Libreto</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+        <link rel="icon" href="{% static "imagenes/logo.png" %}"/>
+        <link rel="icon" href="{% static "imagenes/logoMenu.png" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+        <script type="text/javascript" src="{% static "js/funciones.js" %}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script src="{% static "alertify/alertify.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "alertify/css/alertify.min.css" %}" />
+        <link rel="stylesheet" href="{% static "alertify/css/themes/default.min.css" %}" />
+
+    </head>
+    <body style="background-color: #eee;">
+        
+        <header id="main-header">
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+                
+                <a href="/menu_locutor">
+                    <img src="{% static "imagenes/logoMenu.png"%}" alt="No Encontrada"/>
+                </a>
+
+                <a class="navbar-brand text-white" href="/menu_locutor">
+                  &nbsp; {{ nomUsuario }} {{ apeUsuario }} ({{ nomTipo }})
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link  subrayado  text-center" href="/ver_libreto_loc">Ver Libreto</a>
+                        <a class="nav-link  subrayado  text-center" href="#" onClick="botonCerrarSesion()">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        </header>
+
+        <main>
+        {% if rs %}
+            <div class="container mt-3">
+                <div class="row row-cols-1 row-cols-md-5 g-4">
+                    {% for x in rs %}
+                            <a href="/ver_libreto_menloc_cargar/{{ x.0 }}/{{ x.1 }}" style="text-decoration:none; color:black;">
+                            <div class="col">
+                                <div class="bg-white border" style="border-radius:5px;">
+                                    <div class="card-body p-2">
+                                        {% if x.0 == 1  %} <h5 class="card-title text-center p-2">ENERO      ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 2  %} <h5 class="card-title text-center p-2">FEBRERO    ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 3  %} <h5 class="card-title text-center p-2">MARZO      ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 4  %} <h5 class="card-title text-center p-2">ABRIL      ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 5  %} <h5 class="card-title text-center p-2">MAYO       ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 6  %} <h5 class="card-title text-center p-2">JUNIO      ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 7  %} <h5 class="card-title text-center p-2">JULIO      ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 8  %} <h5 class="card-title text-center p-2">AGOSTO     ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 9  %} <h5 class="card-title text-center p-2">SEPTIEMBRE ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 10 %} <h5 class="card-title text-center p-2">OCTUBRE    ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 11 %} <h5 class="card-title text-center p-2">NOVIEMBRE  ({{x.1}})</h5> {% endif %}
+                                        {% if x.0 == 12 %} <h5 class="card-title text-center p-2">DICIEMBRE  ({{x.1}})</h5> {% endif %}
+                                        <p class="card-text text-center"><strong>Cantidad de Titulados</strong><br/><h4 class="text-center text-danger">{{ x.2 }}</h4></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if r2 %}
+            <script>
+                mensajeAlertifyUsu("{{r2}}","error");
+            </script>
+        {% endif %}
+
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    </body>
+</html>

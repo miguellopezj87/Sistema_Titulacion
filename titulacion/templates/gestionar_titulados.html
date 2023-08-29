@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% load static %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Asistencia</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+        <link rel="icon" href="{% static "imagenes/logo.png" %}"/>
+        <link rel="icon" href="{% static "imagenes/logoMenu.png" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+        <script type="text/javascript" src="{% static "js/funciones.js" %}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script src="{% static "alertify/alertify.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "alertify/css/alertify.min.css" %}" />
+        <link rel="stylesheet" href="{% static "alertify/css/themes/default.min.css" %}" />
+
+
+        <script type="text/javascript">
+            const buscarTitulados = () => {
+                let fechaFiltro = document.getElementById("cbodia").value;
+                filtrar2("{{ lisbus3 }}", "{{ mes }}", "{{ yearTitulacion }}", fechaFiltro);
+            }
+
+            const llamarfiltrarPorFecha = () => {
+                let fechaFiltro = document.getElementById("cbodia").value;
+                filtrarPorFecha("{{ lisbus3 }}", "{{ mes }}", "{{ yearTitulacion }}", fechaFiltro, "{{ listaOpcionesFechas }}");
+            }
+        </script>
+
+    </head>
+    <body onload="buscarTitulados()" style="background-color: #eee;">
+        
+        <header id="main-header">
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+                
+                <a href="/menu_anfitrion">
+                    <img src="{% static "imagenes/logoMenu.png"%}" alt="No Encontrada"/>
+                </a>
+
+                <a class="navbar-brand text-white" href="/menu_anfitrion">
+                  &nbsp; {{ nomUsuario }} {{ apeUsuario }} ({{ nomTipo }})
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link  subrayado  text-center" href="/gestionar_recepcion">Gestionar Recepción</a>
+                        <a class="nav-link  subrayado  text-center" href="/gestionar_recepcion_mensual/{{ yearTitulacion }}">Volver</a>
+                        <a class="nav-link  subrayado  text-center" href="#" onClick="botonCerrarSesion()">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        </header>
+
+        <main>
+        <script>
+            function mensajeAlertify(texto, n, tipoMsg){
+                if(tipoMsg==="success"){
+                    alertify.success(texto + " : " + n);
+                }else if(tipoMsg==="error"){
+                    alertify.error(texto.toUpperCase());
+                }else if(tipoMsg==="warning"){
+                    alertify.warning(texto + " : " + n);
+                }
+            }
+        </script>
+
+        {% if res %}
+            <script>
+                mensajeAlertify("{{res}}","{{n}}","success");
+            </script>
+        {% endif %}
+
+        {% if msgerror %}
+            <script>
+                mensajeAlertify("{{msgerror}}","{{n}}","error");
+            </script>
+        {% endif %}
+
+        {% if mensajeAtraso %}
+            <script>
+                mensajeAlertify("{{mensajeAtraso}}","{{n}}","warning");
+            </script>
+        {% endif %}
+
+        {% if mes == "01" %} <h3 class="mt-2 text-center">Titulados Enero      {{ yea }}</h3> {% endif %}
+        {% if mes == "02" %} <h3 class="mt-2 text-center">Titulados Febrero    {{ yea }}</h3> {% endif %}
+        {% if mes == "03" %} <h3 class="mt-2 text-center">Titulados Marzo      {{ yea }}</h3> {% endif %}
+        {% if mes == "04" %} <h3 class="mt-2 text-center">Titulados Abril      {{ yea }}</h3> {% endif %}
+        {% if mes == "05" %} <h3 class="mt-2 text-center">Titulados Mayo       {{ yea }}</h3> {% endif %}
+        {% if mes == "06" %} <h3 class="mt-2 text-center">Titulados Junio      {{ yea }}</h3> {% endif %}
+        {% if mes == "07" %} <h3 class="mt-2 text-center">Titulados Julio      {{ yea }}</h3> {% endif %}
+        {% if mes == "08" %} <h3 class="mt-2 text-center">Titulados Agosto     {{ yea }}</h3> {% endif %}
+        {% if mes == "09" %} <h3 class="mt-2 text-center">Titulados Septiembre {{ yea }}</h3> {% endif %}
+        {% if mes == "10" %} <h3 class="mt-2 text-center">Titulados Octubre    {{ yea }}</h3> {% endif %}
+        {% if mes == "11" %} <h3 class="mt-2 text-center">Titulados Noviembre  {{ yea }}</h3> {% endif %}
+        {% if mes == "12" %} <h3 class="mt-2 text-center">Titulados Diciembre  {{ yea }}</h3> {% endif %}
+
+        <select id="cbodia" name="cbodia" onchange="llamarfiltrarPorFecha()" class="container form-select text-center mt-2" style="width:50%">
+            <option value="allmydata">Listar Todo El Mes</option>
+            {% if listaOpcionesFechas %}
+                {% for x in listaOpcionesFechas %}
+                    {% if ff == x.fechanormal %}
+                        <option value="{{ x.fechanormal }}" selected>{{ x.fechanormal }}  &nbsp;&nbsp;  {{ x.fechasituacion }}</option>
+                    {% else %}
+                        <option value="{{ x.fechanormal }}">{{ x.fechanormal }}  &nbsp;&nbsp;  {{ x.fechasituacion }}</option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </select>
+
+        <div style="width:90%; margin:auto" class="mt-2 mb-2">
+            <input onkeyup="buscarTitulados()" value="" type="text" class="form-control text-center" placeholder="Digite un Dato para Buscar y Filtrar" id="txtbus"/>
+        </div>
+
+        <table class="table table-hover" style="width:90%; margin:auto;">
+            <thead>
+                <tr>
+                    <th class="text-center">RUT</th>
+                    <th>TITULADO</th>
+                    <th>CARRERA</th>
+                    <!--<th>SIGLA</th>-->
+                    <th>FECHA</th>
+                    <th>ASISTENCIA</td>
+                    <th>N.INVITADOS</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabla_titulados">
+                
+            </tbody>
+        </table>
+
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script type="text/javascript" src="{% static "js/funciones2.js" %}"></script>
+        
+    </body>
+</html>

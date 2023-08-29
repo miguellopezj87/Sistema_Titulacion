@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% load static %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Archivo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+        <link rel="icon" href="{% static "imagenes/logo.png" %}"/>
+        <link rel="icon" href="{% static "imagenes/logoMenu.png" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+        <script type="text/javascript" src="{% static "js/funciones.js" %}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script src="{% static "alertify/alertify.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "alertify/css/alertify.min.css" %}" />
+        <link rel="stylesheet" href="{% static "alertify/css/themes/default.min.css" %}" />
+
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script type="text/javascript">
+            const validarArchivo = () => {
+                file = document.getElementById("miArchivo").value;
+                if(file.length === 0 || (!file.endsWith(".xlsx") && !file.endsWith(".xls"))){
+                    document.getElementById("mensaje").innerHTML = "<h6 style='color:red'>Error. Debe Seleccionar un Archivo Excel</h6>";
+                }else{
+                    document.getElementById('myFormUpl').submit();
+                }
+            }
+
+            const msgSuccess = (nue, rep) => {
+                texto1 = "<h5 class='text-success'>Registros Nuevos    Agregados  : " + nue + "</h5>";
+                texto2 = "<h5 class='text-danger'>Registros Repetidos Detectados : " + rep + "</h5>";
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Datos del Archivo Cargados Correctamente!!',
+                    html: texto1+texto2,
+                    showConfirmButton: true,
+                    //timer: 3000
+                })
+                pausa();
+            }
+
+            async function pausa() {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                window.location.href = "/cargar_archivo";
+            }
+        </script>
+
+    </head>
+    <body style="background-color: #eee;">
+        <header id="main-header">
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+                
+                <a href="/menu_admin">
+                    <img src="{% static "imagenes/logoMenu.png"%}" alt="No Encontrada"/>
+                </a>
+
+                <a class="navbar-brand text-white" href="/menu_admin">
+                  &nbsp; {{ nomUsuario }} {{ apeUsuario }} ({{ nomTipo }})
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link  subrayado  text-center" href="/form_reg_usu">Usuarios</a>
+                        <a class="nav-link  subrayado  text-center" href="/mostrar_gestionar_libreto_adm">Libreto</a>
+                        <a class="nav-link  subrayado  text-center" href="/cargar_archivo">Cargar Archivo</a>
+                        <a class="nav-link  subrayado  text-center" href="/ver_asistentes_adm">Ver Asistentes</a>
+                        <a class="nav-link  subrayado  text-center" href="#" onClick="botonCerrarSesion()">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        </header>
+
+        {% if r %}
+            <script type="text/javascript">
+                msgSuccess({{cannue}},{{canrep}});
+            </script>
+        {% endif%}
+
+        {% if r2 %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h5>{{ r2 }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        {% if tipoMsg %}
+            <script>
+                mensajeAlertifyDeleteYear("{{tipoMsg}}","{{textoMsg}}");
+            </script>
+        {% endif %}
+
+        <main>
+            <center>
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modalDeArchivo">
+                    Cargar Archivo de Datos
+                </button>
+            </center>
+        
+            <div class="container mt-3">
+                <div class="row row-cols-1 row-cols-md-5 g-4">
+                    {% for x in rs %}
+                        <div class="col">
+                            <div class="bg-white border" style="border-radius:5px;">
+                                <div class="card-body p-2">
+                                    <a href="/gestionar_recepcion_menadm/{{ x.0 }}" class="text-dark" style="text-decoration:none">
+                                        <h5 class="card-title text-center p-2">{{ x.0 }}</h5>
+                                        <p class="card-text text-center"><strong>Cantidad de Titulados</strong><br/><h4 class="text-center text-danger">{{ x.1 }}</h4></p>
+                                    </a>
+                                    <center><a class="btn" onclick="eliminarYear({{ x.0 }})"><h2><i class="bi bi-trash3-fill text-danger"></h2></i></a></center>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+          
+            <!-- Modal -->
+            <div class="modal fade" id="modalDeArchivo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content" style="padding:5px;">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cargar Archivo de Datos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form id="myFormUpl" action="/subir_archivo" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input class="form-control" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="miArchivo" id="miArchivo" required>
+                            <center><i class="bi bi-upload text-primary" style="font-size:30px;"></i></center>
+                            <center><p class="text-primary m-0"><h6>(Únicamente Archivos Excel)<h6></p></center>
+                            <center><p id="mensaje"></p></center>
+                        </div>
+
+                        <div class="modal-footer">
+                            <a class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
+                            <a class="btn btn-primary" onClick="validarArchivo()">Aceptar</a>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    </body>
+</html>

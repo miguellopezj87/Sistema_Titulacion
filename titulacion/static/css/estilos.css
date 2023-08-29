@@ -1,0 +1,23 @@
+
+.subrayado{
+    color:white;
+}
+
+.subrayado:hover{
+    text-decoration:underline;
+    background-color: #FFCBCA;
+}
+
+nav a:hover{
+    color:black;
+}
+
+#main-header {
+	width: 100%;        /* La cabecera ocupa el ancho total del documento. */
+	top: 0;             /* Se posiciona la cabecera pegada arriba */
+	position: fixed;    /* Hace que la cabecera tenga una posición fija */
+}
+
+main{
+    margin-top: 70px;
+}

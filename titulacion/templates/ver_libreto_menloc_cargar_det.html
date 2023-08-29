@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% load static %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Asistencia</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+        <link rel="icon" href="{% static "imagenes/logo.png" %}"/>
+        <link rel="icon" href="{% static "imagenes/logoMenu.png" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+        <script type="text/javascript" src="{% static "js/funciones.js" %}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script src="{% static "alertify/alertify.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "alertify/css/alertify.min.css" %}" />
+        <link rel="stylesheet" href="{% static "alertify/css/themes/default.min.css" %}" />
+
+        <script type="text/javascript">
+            const buscarTitulados = () => {
+                let fechaFiltro = document.getElementById("cbodia").value;
+                filtrarTituladosOrg("{{ lisbus3 }}", "{{ mes }}", "{{ yearTitulacion }}", fechaFiltro);
+            }
+
+            const llamarfiltrarPorFecha = () => {
+                let fechaFiltro = document.getElementById("cbodia").value;
+                filtrarPorFechaOrg("{{ lisbus3 }}", "{{ mes }}", "{{ yearTitulacion }}", fechaFiltro, "{{ cargroup }}");
+            }
+        </script>
+
+    </head>
+    <body style="background-color: #eee;">
+        
+        <header id="main-header">
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+                
+                <a href="/menu_locutor">
+                    <img src="{% static "imagenes/logoMenu.png"%}" alt="No Encontrada"/>
+                </a>
+
+                <a class="navbar-brand text-white" href="/menu_locutor">
+                  &nbsp; {{ nomUsuario }} {{ apeUsuario }} ({{ nomTipo }})
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link  subrayado  text-center" href="/ver_libreto_loc">Ver Libreto</a>
+                        <a class="nav-link  subrayado  text-center" href="/ver_libreto_menloc/{{ yea }}">Volver</a>
+                        <a class="nav-link  subrayado  text-center" href="#" onClick="botonCerrarSesion()">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        </header>
+
+        <main>
+
+        {% if mes == "01" %} <h3 class="mt-2 text-center">Titulados Enero      {{ yea }}</h3> {% endif %}
+        {% if mes == "02" %} <h3 class="mt-2 text-center">Titulados Febrero    {{ yea }}</h3> {% endif %}
+        {% if mes == "03" %} <h3 class="mt-2 text-center">Titulados Marzo      {{ yea }}</h3> {% endif %}
+        {% if mes == "04" %} <h3 class="mt-2 text-center">Titulados Abril      {{ yea }}</h3> {% endif %}
+        {% if mes == "05" %} <h3 class="mt-2 text-center">Titulados Mayo       {{ yea }}</h3> {% endif %}
+        {% if mes == "06" %} <h3 class="mt-2 text-center">Titulados Junio      {{ yea }}</h3> {% endif %}
+        {% if mes == "07" %} <h3 class="mt-2 text-center">Titulados Julio      {{ yea }}</h3> {% endif %}
+        {% if mes == "08" %} <h3 class="mt-2 text-center">Titulados Agosto     {{ yea }}</h3> {% endif %}
+        {% if mes == "09" %} <h3 class="mt-2 text-center">Titulados Septiembre {{ yea }}</h3> {% endif %}
+        {% if mes == "10" %} <h3 class="mt-2 text-center">Titulados Octubre    {{ yea }}</h3> {% endif %}
+        {% if mes == "11" %} <h3 class="mt-2 text-center">Titulados Noviembre  {{ yea }}</h3> {% endif %}
+        {% if mes == "12" %} <h3 class="mt-2 text-center">Titulados Diciembre  {{ yea }}</h3> {% endif %}
+
+        <center>
+            <form action="/ver_libreto_menloc_cargar_det/{{mes}}/{{yearTitulacion}}" method="post">
+                {% csrf_token %}
+                <div class="row mb-3" style="width:50%">
+                    <div class="col-8">
+                        <select id="cbodia" name="cbodia" class="container form-select text-center mt-2" style="width:100%" required>
+                            <option value="">Seleccione Opción</option>
+                            {% if listaOpcionesFechas %}
+                                {% for x in listaOpcionesFechas %}
+                                    {% if fecha == x.fechanormal %}
+                                        <option value="{{ x.fechanormal }}" selected>{{ x.fechanormal }}</option>
+                                    {% else %}
+                                        <option value="{{ x.fechanormal }}">{{ x.fechanormal }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col mt-2">
+                        <button style="width:100%" class="btn btn-primary">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </center>
+
+        <div class="container p-2" style="font-size:23px; text-align:center; background-color:#FAF962;">
+            <h2>{{ fechaPalabras }}</h2>
+        </div>
+        <br/>
+
+        {% if cancar %}
+            <h3 class="container mt-2 text-center p-3" style="background-color:#F98380">
+                Sin Asistentes
+            </h3>
+        {% endif%}
+
+        <div class="container bg-white p-5" style="font-size:23px; text-align:justify; border:4px solid black;">
+            <h2><u>INICIO</u></h2>
+            {{ ini | safe }}
+        </div>
+
+        <br/><br/><br/>
+
+        <div class="container bg-white p-5" style="font-size:23px; text-align:justify; border:4px solid black;">
+            <h2><u>SALUDO VICERRECTOR</u></h2>
+            {{ sal | safe }}
+        </div>
+
+        <br/><br/><br/>
+
+        <div class="container bg-white p-5" style="font-size:23px; text-align:justify; border:4px solid black;">
+            {% for x in listafinal %}
+                {{ x | safe }}
+            {% endfor %}
+        </div>
+
+        
+        {% if cancar3 %}
+            <br/><br/><br/>
+            <div class="container bg-white p-5" style="font-size:23px; text-align:justify; border:4px solid red;">
+                {% for x in listaAtrasos %}
+                    {{ x | safe }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <br/><br/><br/>
+
+        <div class="container bg-white p-5" style="font-size:23px; text-align:justify; border:4px solid black;">
+            <h2><u>TERMINO</u></h2>
+            {{ ter | safe }}
+        </div>
+
+        <br/><br/><br/>
+
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script type="text/javascript" src="{% static "js/funciones2.js" %}"></script>
+        
+    </body>
+</html>

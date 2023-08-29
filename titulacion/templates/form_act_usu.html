@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% load static %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Usuario</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+        <link rel="icon" href="{% static "imagenes/logo.png" %}"/>
+        <link rel="icon" href="{% static "imagenes/logoMenu.png" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/estilos.css" %}">
+        <script type="text/javascript" src="{% static "js/funciones.js" %}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script type="text/javascript">
+            const buscarUsuarios = () => {
+                filtrar("{{ lisbus3 }}");
+            }
+
+            const botonCancelar = () => {
+                window.location.href = "/form_reg_usu";
+            }
+        </script>
+        
+    </head>
+    <body onload="buscarUsuarios()" style="background-color: #eee;">
+        
+        <header id="main-header">
+        <nav class="navbar navbar-expand-lg bg-danger">
+            <div class="container-fluid">
+
+                <a href="/menu_admin">
+                    <img src="{% static "imagenes/logoMenu.png"%}" alt="No Encontrada"/>
+                </a>
+
+                <a class="navbar-brand text-white" href="/menu_admin">
+                  &nbsp; {{ nomUsuario }} {{ apeUsuario }} ({{ nomTipo }})
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link  subrayado  text-center" href="/form_reg_usu">Usuarios</a>
+                        <a class="nav-link  subrayado  text-center" href="/mostrar_gestionar_libreto_adm">Libreto</a>
+                        <a class="nav-link  subrayado  text-center" href="/cargar_archivo">Cargar Archivo</a>
+                        <a class="nav-link  subrayado  text-center" href="/ver_asistentes_adm">Ver Asistentes</a>
+                        <a class="nav-link  subrayado  text-center" href="#" onClick="botonCerrarSesion()">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        </header>
+
+            
+
+        {% if r %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <h5>{{ r }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        {% if r2 %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h5>{{ r2 }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        
+        <main>
+        <div style="width:450px; margin:auto;" class="mt-3">
+            
+            <form action="/actualizar_usuario/{{encontrado.id}}" method="post">
+                {% csrf_token %}
+                <center>
+                    <h3>Modificación de Usuarios</h3>
+                    <input class="form-control   text-center mb-2"   style="width:95%;"  type="text"      placeholder="Digite el Rut"         name="txtrut"  required   value="{{ encontrado.rutUsuario }}" >
+                    <input class="form-control   text-center mb-2"   style="width:95%;"  type="text"      placeholder="Digite el Nombre"      name="txtnom"  required   value="{{ encontrado.nomUsuario }}" >
+                    <input class="form-control   text-center mb-2"   style="width:95%;"  type="text"      placeholder="Digite el Apellido"    name="txtape"  required   value="{{ encontrado.apeUsuario }}" >
+                    <input class="form-control   text-center mb-2"   style="width:95%;"  type="password"  placeholder="Digite la Contraseña"  name="txtpas"  required   value="{{ encontrado.pasUsuario }}" >
+
+
+                    <select name="cbotip" class="form-select   text-center   mb-2" style="width:95%;" required>
+                        <option value="">Selecciones Tipo de Cuenta</option>
+                        {% for x in opcionesTipos %}
+                            {% if encontrado.tipo.id == x.id %}
+                                <option value="{{ x.id }}" selected>{{ x.nomTipo }}</option>
+                            {% else %}
+                                <option value="{{ x.id }}">{{ x.nomTipo }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <select name="cboest" class="form-select   text-center   mb-2" style="width:95%;" required>
+                        <option value="">Selecciones Estado de Cuenta</option>
+                        {% for x in opcionesEstados %}
+                            {% if encontrado.estado.id == x.id %}
+                                <option value="{{ x.id }}" selected>{{ x.nomEstado }}</option>
+                            {% else %}
+                                <option value="{{ x.id }}">{{ x.nomEstado }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    
+                    <button type="submit" class="btn   btn-danger">
+                        <i class="bi bi-pencil-fill"></i> Guardar Cambios
+                    </button>
+                    <a onClick="botonCancelar()" class="btn   btn-warning">
+                        <i class="bi bi-caret-left-fill text-white"></i>Cancelar</a>
+                </center>
+            </form>
+        
+        </div>
+
+        <br/>
+
+
+        {% if usu %}
+            <h3 class="text-center">Listado de Usuarios</h3>
+
+            <div style="width:90%; margin:auto" class="mb-2">
+                <input onkeyup="buscarUsuarios()" type="text" class="form-control text-center" placeholder="Digite un Dato para Buscar y Filtrar" id="txtbus"/>
+            </div>
+
+            <table class="table table-hover" style="width:90%; margin:auto;">
+                <thead>
+                    <tr class="text-center">
+                        <th>RUT</th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>TIPO</th>
+                        <th>ESTADO</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="tabla_usuarios">
+                    
+                </tbody>
+            </table>
+        
+        {% else %}
+            <h3 style="color:red;" class="text-center   mt-3"><center>No Hay Registros Para Listar</center></h3>
+        {% endif %}            
+
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    </body>
+</html>
